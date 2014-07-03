@@ -2,14 +2,7 @@ require 'pg'
 require 'sinatra'
 require 'pry-byebug'
 
-# require_relative '/lib/leftovers/entities/restaurants.rb'
-require_relative 'lib/leftovers/entities/users.rb'
-require_relative 'lib/leftovers/entities/foods.rb'
-require_relative 'lib/leftovers/entities/restaurants.rb'
-require_relative 'lib/leftovers/databases/database.rb'
-require_relative 'lib/leftovers/scripts/user_registration.rb'
-require_relative 'lib/leftovers/scripts/sign_in.rb'
-require_relative 'lib/leftovers/scripts/restaurant_registration.rb'
+require_relative './lib/leftovers.rb'
 
 
 set :bind, '0.0.0.0'
@@ -20,45 +13,45 @@ get '/' do
 	erb :welcome
 end
 
-get '/user_registration' do
+get '/sign_up' do
 @result =  {
   :success? => nil,
   :error => nil,
   :sesh_id => nil,
   :user => nil
 }
-	erb :user_registration
+	erb :sign_up
 end
 
-post '/user_registration' do
+post '/sign_up' do
 	@result = Leftovers::UserRegistration.run(params)
 	if @result[:success?]
 		session[:sesh_id] = @result[:sesh_id]
 		session[:user] = @result[:user]
-		redirect to '/home'
+		redirect to '/'
 	else
-		erb :user_registration
+		erb :sign_up
 	end
 end
 
-get '/restaurant_registration' do
+get '/donate' do
 @result =  {
   :success? => nil,
   :error => nil,
   :sesh_id => nil,
   :user => nil
 }
-	erb :restaurant_registration
+	erb :donate
 end
 
-post '/restaurant_registration' do
+post '/donate' do
 	@result = Leftovers::RestaurantRegistration.run(params)
 	if @result[:success?]
 		session[:sesh_id] = @result[:sesh_id]
 		session[:restaurant] = @result[:restaurant]
-		redirect '/home'
+		redirect '/'
 	else
-		erb :restaurant_registration
+		erb :donate
 	end
 end
 
@@ -82,13 +75,31 @@ post '/sign_in' do
 		else
 			session[:user] = @result[:user]
 		end
-	redirect '/home'
+	redirect '/'
 	else
 		erb :sign_in
 	end
+end
+
+get '/contact' do
+  erb :contact
 end
 
 get '/logout' do
   session.clear
   redirect to '/'
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

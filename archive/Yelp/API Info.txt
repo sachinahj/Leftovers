@@ -1,0 +1,2 @@
+Yelp API
+API v1.0 access key: 48u8JP2FlKIqsscLJlvObg
