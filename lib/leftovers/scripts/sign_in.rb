@@ -15,7 +15,7 @@ module Leftovers
 					user: nil
 				}
 			elsif user != nil && restaurant == nil
-				if user.has_password?(params[:password]) == true
+				if user.has_password?(params[:password]) == false
 					return {
 						success?: false,
 						error: :invalid_password,
@@ -23,9 +23,7 @@ module Leftovers
 						user: nil
 					}
 				else
-					puts user.inspect
 					sesh_id = user.create_session
-					user = user.save
 					return {
 						success?: true,
 						error: :none,
@@ -34,7 +32,7 @@ module Leftovers
 					}
 				end
 			else 
-				if restaurant.has_password?(params[:password]) == true
+				if restaurant.has_password?(params[:password]) == false
 					return {
 						success?: false,
 						error: :invalid_password,
@@ -43,7 +41,6 @@ module Leftovers
 					}
 				else
 					sesh_id = restaurant.create_session
-					restaurant = restaurant.save
 					return {
 						success?: true,
 						error: :none,

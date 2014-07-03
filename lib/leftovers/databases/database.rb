@@ -17,9 +17,9 @@ module Leftovers
 		end
 
 		# Updates Restaurant entity with encrypted password and session ID
-		def update_restaurant(restaurant_id,password)
-			result = @db.exec_params(%Q[ UPDATE restaurants SET(password)
-				= ('#{password}')	where id = '#{restaurant_id}' returning *])
+		def update_restaurant(restaurant_id,password,coordinates)
+			result = @db.exec_params(%Q[ UPDATE restaurants SET(password, coordinates)
+				= ('#{password}','#{coordinates}')	where id = '#{restaurant_id}' returning *])
 			params = result.map { |x| x }
 			return params
 		end
@@ -42,13 +42,27 @@ module Leftovers
 	 		if params.empty?
 	 			return nil
  			else	
-	 			restaurant = Leftovers::Restaurants.new(params.first["username"],params.first["category"],result.first["address"],result.first["coordinates"],result.first["id"])
+	 			restaurant = Leftovers::Restaurants.new(params.first["username"],params.first["category"],result.first["address"],result.first["coordinates"],result.first["id"],params.first["password"])
 	 			return restaurant
 	 		end
 	 	end
 
+	 	def get_restaurant_by_id(restaurant_id)
+	 		result = @db.exec("SELECT * FROM restaurants where id = '#{restaurant_id}'")
+	 		params = result.map { |x| x }
+	 		if params.empty?
+	 			return nil
+ 			else	
+	 			restaurant = Leftovers::Restaurants.new(params.first["username"],params.first["category"],result.first["address"],result.first["coordinates"],result.first["id"],params.first["password"])
+	 			return restaurant
+	 		end
+	 	end
+
+	 	def delete_restaurant_by_id(restaurant_id)
+	 		result = @db.exec("DELETE FROM restaurants where id = '#{restaurant_id}'")
+	 	end
+
 		def create_restaurant_session(restaurant_id)
-			puts restaurant_id
 			random_phrase = rand(100).to_s + restaurant_id + rand(100).to_s
       session_id = Digest::SHA1.hexdigest(random_phrase)
 
@@ -102,8 +116,7 @@ module Leftovers
 	 		if params.empty?
 	 			return nil
 	 		else
-	 			puts params
-	 			user = Leftovers::Users.new(params.first["username"],params.first["organization"],params.first["id"])
+	 			user = Leftovers::Users.new(params.first["username"],params.first["organization"],params.first["id"],params.first["password"])
 	 			return user
 	 		end
  	 	end

@@ -3,7 +3,7 @@ require 'digest'
 module Leftovers
 
 	class Restaurants 
-		attr_reader :username, :category, :address, :coordinates, :restaurant_id
+		attr_accessor :username, :category, :address, :coordinates, :restaurant_id
 
 		def initialize(username,category,address,coordinates = nil, restaurant_id = nil, password = nil)
 		 	@username = username
@@ -20,7 +20,7 @@ module Leftovers
 		end
 
 		def save
-			id_from_db = Leftovers.orm.update_restaurant(@restaurant_id,@password)
+			id_from_db = Leftovers.orm.update_restaurant(@restaurant_id,@password,@coordinates)
 			self
 		end
 
