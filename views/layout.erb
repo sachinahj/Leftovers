@@ -1,0 +1,16 @@
+require 'pg'
+require 'sinatra'
+require 'pry-byebug'
+
+require_relative '/entities/restaurants.rb'
+require_relative '/entities/users.rb'
+require_relative '/entities/foods.rb'
+require_relative '/databases/database.rb'
+
+set :bind, '0.0.0.0'
+
+enable :sessions
+
+get '/' do 
+	if sessions[:user_id]
+end
