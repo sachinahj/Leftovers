@@ -22,7 +22,7 @@ command = <<-SQL
 
 	CREATE TABLE IF NOT EXISTS foods (
 	id serial NOT NULL PRIMARY KEY,
-	restaurant_id integer REFERENCE restaurants(id),
+	restaurant_id integer REFERENCES restaurants(id),
 	name varchar(30),
 	description text,
 	quantity text
@@ -30,14 +30,16 @@ command = <<-SQL
 
 	CREATE TABLE IF NOT EXISTS users_session_id (
 	id serial NOT NULL PRIMARY KEY,
-	user_id integer REFERENCE users(id),
+	user_id integer REFERENCES users(id),
 	session_id text
 );
 
 	CREATE TABLE IF NOT EXISTS restaurants_session_id (
 	id serial NOT NULL PRIMARY KEY,
-	restaurant_id integer REFERENCE restaurants(id),
+	restaurant_id integer REFERENCES restaurants(id),
 	session_id text
 );
 SQL
 
+result = db.exec(command)
+p result.values

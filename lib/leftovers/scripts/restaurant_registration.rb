@@ -4,9 +4,9 @@ module Leftovers
 
 		def self.run(params)
 			#params :username, :category, :address, :password, :password_confirm
-			restaurant = Leftovers.orm.get_restaurant_by_username(params[:username])
+			restaurant = Leftovers.orm.check_restaurant_exists(params[:username])
 
-			if restaurant.nil?
+			if restaurant != nil
 				return {
 					success?: false,
 					error: :restaurant_already_exists,
@@ -21,17 +21,18 @@ module Leftovers
 					restaurant: nil
 				}
 			else
-				restaurant = Leftovers::Restaurant.new(params[:restaurantname],params[:category],params[:address])
+				restaurant = Leftovers::Restaurants.new(params[:username],params[:category],params[:address])
 				restaurant.update_password(params[:password])
-				restaurant.create!
+				restaurant.create
 				sesh_id = restaurant.create_session
-				restaurant = restaurant.save!
+				restaurant = restaurant.save
 				return {
 					success?: true,
 					error: :none,
-					sesh_id: sesh_id
+					sesh_id: sesh_id,
 					restaurant: restaurant
 				}
+			end
 		end
 
 	end

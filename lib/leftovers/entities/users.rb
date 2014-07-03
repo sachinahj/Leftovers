@@ -10,12 +10,12 @@ module Leftovers
 			@password = password
 		end
 
-		def create!
+		def create
 			@user_id = Leftovers.orm.create_user(@username,@organization)
 			self
 		end
 
-		def save!
+		def save
 			Leftovers.orm.update_user(@user_id,@password)
 			self
 		end
@@ -29,7 +29,7 @@ module Leftovers
 		end
 
 		def create_session
-			Leftover.orm.create_user_session(@user_id)
+			Leftovers.orm.create_user_session(@user_id)
 		end
 	
 	end

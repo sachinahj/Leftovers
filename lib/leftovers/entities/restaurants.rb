@@ -14,12 +14,12 @@ module Leftovers
 		 	@password = password
 		end
 
-		def create!
+		def create
 			@restaurant_id = Leftovers.orm.create_restaurant(@username,@category,@address,@coordinates)
 			return self
 		end
 
-		def save!
+		def save
 			id_from_db = Leftovers.orm.update_restaurant(@restaurant_id,@password)
 			self
 		end
@@ -33,7 +33,7 @@ module Leftovers
 		end
 
 		def create_session
-			Leftover.orm.create_restaurant_session(@user_id)
+			Leftovers.orm.create_restaurant_session(@restaurant_id)
 		end
 
 	end

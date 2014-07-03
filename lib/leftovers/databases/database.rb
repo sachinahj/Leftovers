@@ -18,20 +18,37 @@ module Leftovers
 
 		# Updates Restaurant entity with encrypted password and session ID
 		def update_restaurant(restaurant_id,password)
-			result = @db.exec_params(%Q[ UPDATE users SET(password)
+			result = @db.exec_params(%Q[ UPDATE restaurants SET(password)
 				= ('#{password}')	where id = '#{restaurant_id}' returning *])
-			result.map! { |x| x }
-			return result
+			params = result.map { |x| x }
+			return params
 		end
 
 	 	# Gets restaurant through username
+	 	def check_restaurant_exists(username)
+	 		result = @db.exec("SELECT * FROM restaurants where username = '#{username}'")
+	 		params = result.map { |x| x }
+	 		if params.empty?
+	 			return nil
+ 			else	
+	 			restaurant = Leftovers::Restaurants.new(params.first["username"],params.first["category"],result.first["address"])
+	 			return restaurant
+	 		end
+	 	end
+
 	 	def get_restaurant_by_username(username)
-	 		result = @db.exec("SELECT * FROM restaurant where username = #{username}")
-	 		restaurant = Leftovers::Restaurants.new(result.first["username"],result.first["category"],result.first["address"])
-	 		return restaurant
+	 		result = @db.exec("SELECT * FROM restaurants where username = '#{username}'")
+	 		params = result.map { |x| x }
+	 		if params.empty?
+	 			return nil
+ 			else	
+	 			restaurant = Leftovers::Restaurants.new(params.first["username"],params.first["category"],result.first["address"],result.first["coordinates"],result.first["id"])
+	 			return restaurant
+	 		end
 	 	end
 
 		def create_restaurant_session(restaurant_id)
+			puts restaurant_id
 			random_phrase = rand(100).to_s + restaurant_id + rand(100).to_s
       session_id = Digest::SHA1.hexdigest(random_phrase)
 
@@ -53,8 +70,8 @@ module Leftovers
 		def update_user(user_id,password)
 			result = @db.exec_params(%Q[ UPDATE users SET (password)
 				= ('#{password}')	where id = '#{user_id}' returning *])
-			result.map! { |x| x }
-			return result
+			params = result.map { |x| x }
+			return params
 		end
 
 		def create_user_session(user_id)
@@ -68,12 +85,28 @@ module Leftovers
 		end
 
 	 	# Gets user through username
-	 	def get_user_by_username(username)
-	 		result = @db.exec("SELECT * FROM users where username = #{username}")
-	 		user = Leftovers::Users.new(result.first["username"],result.first["organization"])
-	 		return user
+	 	def check_user_exists(username)
+	 		result = @db.exec("SELECT * FROM users where username = '#{username}'")
+			params = result.map { |x| x }
+	 		if params.empty?
+	 			return nil
+	 		else
+	 			user = Leftovers::Users.new(params.first["username"],params.first["organization"])
+	 			return user
+	 		end
 	 	end
 
+ 	 	def get_user_by_username(username)
+	 		result = @db.exec("SELECT * FROM users where username = '#{username}'")
+			params = result.map { |x| x }
+	 		if params.empty?
+	 			return nil
+	 		else
+	 			puts params
+	 			user = Leftovers::Users.new(params.first["username"],params.first["organization"],params.first["id"])
+	 			return user
+	 		end
+ 	 	end
 
 		# Creates a food entity
 		def create_food(name,description,quantity)
