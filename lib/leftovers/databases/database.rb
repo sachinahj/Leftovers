@@ -58,6 +58,21 @@ module Leftovers
 			return session_id
 		end
 
+		def validate_restaurant_session?(session)
+			result = @db.exec("SELECT * FROM restaurants_session_id where session_id = '#{session[:sesh_id]}'")
+			params = result.map { |x| x }
+			puts "HEY THIS IS PARAMS ->> #{params}"
+			if params.empty?
+				return false
+			else
+				return params[0][:restaurant_id] == session[:restaurant]
+			end
+		end
+
+		def delete_restaurant_session(sesh_id)
+			@db.exec("DELETE FROM restaurants_session_id WHERE session_id = '#{sesh_id}'")
+		end
+
 		# Creates a User entity 
 		def create_user(username,organization)
 			result = @db.exec_params(%Q[ INSERT INTO users (username,organization)
@@ -106,6 +121,20 @@ module Leftovers
 	 			user = Leftovers::Users.new(params.first["username"],params.first["organization"],params.first["id"])
 	 			return user
 	 		end
+ 	 	end
+
+		def validate_user_session?(session)
+			result = @db.exec("SELECT * FROM users_session_id where session_id = '#{session[:sesh_id]}'")
+			params = result.map { |x| x }
+			if params.empty?
+				return false
+			else
+				return params[0][:user_id] == session[:user]
+			end
+		end
+
+ 	 	def delete_user_session(sesh_id)
+ 	 		@db.exec("DELETE FROM users_session_id WHERE session_id = '#{sesh_id}'")
  	 	end
 
 		# Creates a food entity

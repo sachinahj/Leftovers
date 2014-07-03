@@ -28,7 +28,7 @@ post '/sign_up' do
   p "@result --> #{@result.inspect}"
 	if @result[:success?]
 		session[:sesh_id] = @result[:sesh_id]
-		session[:user] = @result[:user]
+		session[:user] = @result[:user].user_id
 		redirect to '/'
 	else
 		erb :sign_up
@@ -49,7 +49,7 @@ post '/donate' do
 	@result = Leftovers::RestaurantRegistration.run(params)
 	if @result[:success?]
 		session[:sesh_id] = @result[:sesh_id]
-		session[:restaurant] = @result[:restaurant]
+		session[:restaurant] = @result[:restaurant].restaurant_id
 		redirect '/'
 	else
 		erb :donate
@@ -57,13 +57,22 @@ post '/donate' do
 end
 
 get '/sign_in' do
-@result =  {
-  :success? => nil,
-  :error => nil,
-  :sesh_id => nil,
-  :user => nil
-}	
-	erb :sign_in
+	if session[:sesh_id] != nil
+		@result = Leftovers::ValidateSession.run(session)
+		if @result[:login] == "user"
+			redirect '/user_home'
+		else
+			redirect '/restaurant_home'
+		end
+	else
+		@result =  {
+		  :success? => nil,
+		  :error => nil,
+		  :sesh_id => nil,
+		  :user => nil
+		}	
+			erb :sign_in
+	end
 end
 
 post '/sign_in' do
@@ -72,9 +81,9 @@ post '/sign_in' do
 	if @result[:success?] 
 		session[:sesh_id] = @result[:sesh_id]
 		if @result[:user].nil?
-			session[:restaurant] = @result[:restaurant]
+			session[:restaurant] = @result[:restaurant].restaurant_id
 		else
-			session[:user] = @result[:user]
+			session[:user] = @result[:user].user_id
 		end
 	redirect '/'
 	else
@@ -87,6 +96,7 @@ get '/contact' do
 end
 
 get '/logout' do
+	Leftovers::Logout.run(session)
   session.clear
   redirect to '/'
 end
