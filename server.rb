@@ -81,14 +81,22 @@ get '/user_home' do
 end
 
 get '/sign_in' do
-  # add session id check
-@result =  {
-  :success? => nil,
-  :error => nil,
-  :sesh_id => nil,
-  :user => nil
-}	
-	erb :sign_in
+	if session[:sesh_id] != nil
+		@result = Leftovers::ValidateSession.run(session)
+		if @result[:login] == "user"
+			redirect '/user_home'
+		else
+			redirect '/restaurant_home'
+		end
+	else
+		@result =  {
+		  :success? => nil,
+		  :error => nil,
+		  :sesh_id => nil,
+		  :user => nil
+		}	
+			erb :sign_in
+	end
 end
 
 post '/sign_in' do
@@ -114,6 +122,7 @@ get '/contact' do
 end
 
 get '/logout' do
+	Leftovers::Logout.run(session)
   session.clear
   redirect to '/'
 end
