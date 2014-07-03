@@ -10,24 +10,34 @@ command = <<-SQL
 	password text,
 	address text,
 	coordinates text,
-	category text,
-	session_id text
+	category text
 );
 
 	CREATE TABLE IF NOT EXISTS users (
 	id serial NOT NULL PRIMARY KEY,
 	username varchar(30),
 	organization text,
-	password text,
-	session_id text
+	password text
 );
 
 	CREATE TABLE IF NOT EXISTS foods (
 	id serial NOT NULL PRIMARY KEY,
-	restaurant_id varchar(30) REFERENCE restaurants(id),
+	restaurant_id integer REFERENCE restaurants(id),
 	name varchar(30),
 	description text,
 	quantity text
+);
+
+	CREATE TABLE IF NOT EXISTS users_session_id (
+	id serial NOT NULL PRIMARY KEY,
+	user_id integer REFERENCE users(id),
+	session_id text
+);
+
+	CREATE TABLE IF NOT EXISTS restaurants_session_id (
+	id serial NOT NULL PRIMARY KEY,
+	restaurant_id integer REFERENCE restaurants(id),
+	session_id text
 );
 SQL
 

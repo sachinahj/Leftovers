@@ -1,0 +1,8 @@
+require_relative '../lib/databases/database.rb'
+require_relative '../lib/databases/table_initializer.rb'
+require_relative '../lib/entities/foods.rb'
+require_relative '../lib/entities/restaurants.rb'
+require_relative '../lib/entities/users.rb'
+require_relative '../lib/scripts/restaurant_registration.rb'
+require_relative '../lib/scripts/sign_in.rb'
+require_relative '../lib/scripts/user_registration.rb'

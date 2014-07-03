@@ -1,16 +1,17 @@
+require 'digest'
+
 module Leftovers
 
 	class Restaurants 
 		attr_reader :username, :category, :address, :coordinates, :restaurant_id
 
-		def initialize(username,category,address,coordinates = nil, restaurant_id = nil, password = nil, session_id = nil)
+		def initialize(username,category,address,coordinates = nil, restaurant_id = nil, password = nil)
 		 	@username = username
 		 	@category = category
 		 	@address = address
 		 	@coordinates = coordinates
 		 	@restaurant_id = restaurant_id
 		 	@password = password
-		 	@session_id = session_id
 		end
 
 		def create!
@@ -19,7 +20,7 @@ module Leftovers
 		end
 
 		def save!
-			id_from_db = Leftovers.orm.update_restaurant(@restaurant_id,@password,@session_id)
+			id_from_db = Leftovers.orm.update_restaurant(@restaurant_id,@password)
 			self
 		end
 
@@ -32,9 +33,7 @@ module Leftovers
 		end
 
 		def create_session
-     	random_phrase = rand(100).to_s + username + rand(100).to_s
-      @session_id = Digest::SHA1.hexdigest(random_phrase)
-      return @session_id
+			Leftover.orm.create_restaurant_session(@user_id)
 		end
 
 	end
