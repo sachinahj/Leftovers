@@ -25,6 +25,7 @@ end
 
 post '/sign_up' do
 	@result = Leftovers::UserRegistration.run(params)
+  p "@result --> #{@result.inspect}"
 	if @result[:success?]
 		session[:sesh_id] = @result[:sesh_id]
 		session[:user] = @result[:user]

@@ -1,4 +1,4 @@
-# be ruby lib/databases/table_initializer.rb
+# be ruby lib/leftovers/databases/table_initializer.rb
 require 'pg'
 
 db = PG.connect(host: 'localhost', dbname: 'leftovers')
