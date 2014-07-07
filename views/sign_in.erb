@@ -9,4 +9,15 @@
       <input type="password" name="password" placeholder="Password"></input>
       <center><input type="submit" class="submit small button"></input></center>
     </form>
+    <% if @result[:error] %>
+      <% if @result[:error] == :restaurant_and_user_both_do_not_exist %>
+        <p>No user/restaurant with that username exist<br>
+        Try again with a different username or sign up!</p>
+      <% elsif @result[:error] == :invalid_password %>
+        <p>You entered the wrong password<br>
+        Try again with a different password</p>
+      <% else %>
+        <p>Unknown error: <%= @result[:error] %></p>
+      <% end %>
+    <% end %>
 </center>

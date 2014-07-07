@@ -75,7 +75,6 @@ module Leftovers
 		def validate_restaurant_session?(session)
 			result = @db.exec("SELECT * FROM restaurants_session_id where session_id = '#{session[:sesh_id]}'")
 			params = result.map { |x| x }
-			puts "HEY THIS IS PARAMS ->> #{params}"
 			if params.empty?
 				return false
 			else

@@ -16,7 +16,7 @@ module Leftovers
 			elsif params[:password] != params[:password_confirm]
 				return {
 					success?: false,
-					error: :passwords_do_not_match,
+					error: :mismatch_passwords,
 					sesh_id: nil,
 					restaurant: nil
 				}

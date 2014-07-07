@@ -11,4 +11,15 @@
       <input type="password" name="password_confirm" placeholder="Confirm Password"></input>
       <input type="submit" class="submit small button"></input>
     </form>
+    <% if @result[:error] %>
+      <% if @result[:error] == :user_already_exist %>
+        <p>A user with that username already exist.
+        Please choose another username</p>
+      <% elsif @result[:error] == :mismatch_passwords %>
+        <p>The passwords you entered don't match.
+        Try again with matching passwords</p>
+      <% else %>
+        <p>Unknown error: <%= @result[:error] %></p>
+      <% end %>
+    <% end %>
 </center>
